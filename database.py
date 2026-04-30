@@ -1,13 +1,17 @@
 import sqlite3
 import hashlib
 import os
+import getpass
 
 # Grab DB_PATH from environment (used by K8s PVC) or fallback to local repo directory
 DB_NAME = os.environ.get("DB_PATH", "sportlytics.db")
 
+
+
 def init_db():
-    # Ensure the parent directory exists
+    # Ensure database directory exists
     db_dir = os.path.dirname(os.path.abspath(DB_NAME))
+
     if db_dir and not os.path.exists(db_dir):
         try:
             os.makedirs(db_dir, exist_ok=True)
@@ -15,15 +19,20 @@ def init_db():
         except Exception as e:
             print(f"Error creating directory {db_dir}: {e}")
 
-    # Print diagnostics for debugging
+    # Debug info
     print(f"Connecting to database: {DB_NAME}")
-    print(f"Effective user ID: {os.getuid()}")
+
+    if hasattr(os, "getuid"):
+        print(f"Effective user ID: {os.getuid()}")
+    else:
+        print(f"Current user: {getpass.getuser()}")
+
     if os.path.exists(db_dir):
         print(f"Directory {db_dir} permissions: {oct(os.stat(db_dir).st_mode)}")
-    
+
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    
+
     # Users table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
@@ -33,7 +42,7 @@ def init_db():
         password TEXT NOT NULL
     )
     """)
-    
+
     # History table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS history (
@@ -45,7 +54,7 @@ def init_db():
         FOREIGN KEY (user_id) REFERENCES users (id)
     )
     """)
-    
+
     conn.commit()
     conn.close()
 

@@ -1,35 +1,23 @@
 # ========================================
-# Stage 1: Builder
+# Dockerfile for FastAPI Backend
 # ========================================
-FROM python:3.10-slim AS builder
+FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install system dependencies needed for compiling Python packages
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and construct wheels
-COPY requirement.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirement.txt
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# ========================================
-# Stage 2: Runner
-# ========================================
-FROM python:3.10-slim
-
-WORKDIR /app
-
-# Create a non-root user with deterministic IDs for Kubernetes and a physical home directory
+# Create a non-root user
 RUN groupadd --system --gid 1000 appgroup && useradd --system --uid 1000 --gid 1000 -m appuser
-
-# Copy wheels from builder and install
-COPY --from=builder /app/wheels /wheels
-COPY --from=builder /app/requirement.txt .
-RUN pip install --no-cache /wheels/*
 
 # Copy application code
 COPY . .
@@ -40,9 +28,9 @@ RUN mkdir -p /app/data
 # Change ownership to non-root user
 RUN chown -R appuser:appgroup /app
 
-# Switch to non-root user for security
+# Switch to non-root user
 USER appuser
 
-EXPOSE 8501
+EXPOSE 8000
 
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

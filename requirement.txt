@@ -1,8 +1,0 @@
-crewai
-langchain-community
-langchain-ollama
-streamlit
-crewai-tools
-groq
-tavily-python
-litellm

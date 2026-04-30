@@ -6,3 +6,8 @@ crewai-tools
 groq
 tavily-python
 litellm
+fastapi
+uvicorn
+python-multipart
+pydantic
+python-dotenv

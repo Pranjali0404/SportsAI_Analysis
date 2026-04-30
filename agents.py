@@ -2,43 +2,45 @@ from crewai import Agent, LLM
 from crewai_tools import TavilySearchTool
 from sports_analysis import check_resource
 import os
-print(os.getenv("GROQ_API_KEY"))
+from dotenv import load_dotenv
+
+load_dotenv()
+
 search_tool = TavilySearchTool()
 search_tool.name = "tavily_search"
 
 local_llm = LLM(
-    model="groq/llama-3.3-70b-versatile", # Switched to a lighter model to avoid TPM rate limits
+    model="groq/llama-3.1-8b-instant", # Switched to 8b for higher TPM/RPM limits and better reliability
     temperature=0.3
 )
 
 planner_agent = Agent(
     role='Lead Sports Planner',
     goal='Research real-time sports data and plan analysis steps.',
-    backstory="Expert sports strategist using live match statistics.",
+    backstory="Expert sports strategist. BE CONCISE.",
     llm=local_llm,
     tools=[search_tool],
     allow_delegation=False,
-    verbose=True,
-    max_iter=5
+    verbose=False,
+    max_iter=2
 )
 
 analyst_agent = Agent(
     role='Resource Validator',
-    goal='Validate tool availability and prepare execution schedule.',
-    backstory="Technical feasibility expert.",
+    goal='Verify tool availability.',
+    backstory="Technical expert. BE CONCISE.",
     llm=local_llm,
     tools=[check_resource],
     allow_delegation=False,
-    verbose=True,
-    max_iter=3
+    verbose=False,
+    max_iter=1
 )
 
 reporter_agent = Agent(
     role="Chief Sports Editor",
     goal="Combine analysis into a final markdown report.",
-    backstory="Expert editor merging sports data and execution plans.",
+    backstory="Expert editor. BE CONCISE.",
     llm=local_llm,
     allow_delegation=False,
-    verbose=True
-
+    verbose=False
 )

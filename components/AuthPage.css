@@ -1,0 +1,204 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Background */
+
+.auth-wrapper {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0f172a, #7a0c3f, #1e293b);
+    background-size: 300% 300%;
+    animation: gradientMove 10s ease infinite;
+}
+
+/* Animated gradient */
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+/* Card */
+
+.auth-card {
+    display: flex;
+    width: 850px;
+    height: 500px;
+    border-radius: 16px;
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Left Panel */
+
+.auth-left {
+    flex: 1;
+    background: linear-gradient(135deg, #7a0c3f, #c2185b);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    text-align: center;
+}
+
+.auth-left h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.auth-left p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* Right Panel */
+
+.auth-right {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+/* Title */
+
+.auth-right h2 {
+    margin-bottom: 25px;
+    color: #7a0c3f;
+    text-align: center;
+}
+
+/* Input Fields */
+
+.auth-right input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.auth-right input:focus {
+    border-color: #7a0c3f;
+    box-shadow: 0 0 6px rgba(122, 12, 63, 0.3);
+    outline: none;
+}
+
+/* Button */
+
+.auth-right button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #7a0c3f, #c2185b);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.auth-right button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Divider */
+
+.divider {
+    text-align: center;
+    margin: 20px 0;
+    color: #888;
+    font-size: 14px;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #ddd;
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+/* Switch login/signup */
+
+.switch {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+}
+
+.switch span {
+    color: #c2185b;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.switch span:hover {
+    text-decoration: underline;
+}
+
+/* Google Button Container */
+
+.auth-right div[role="button"] {
+    margin: auto;
+}
+
+/* Responsive */
+
+@media(max-width:850px) {
+
+    .auth-card {
+        flex-direction: column;
+        width: 90%;
+        height: auto;
+    }
+
+    .auth-left {
+        padding: 25px;
+    }
+
+    .auth-right {
+        padding: 30px;
+    }
+
+}

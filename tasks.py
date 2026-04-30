@@ -1,43 +1,28 @@
+from datetime import datetime
 from crewai import Task
 
-# Notice the third argument here: 'reporter'
-def create_tasks(planner, analyst, reporter):
+# Updated to accept 'query' as the first argument
+def create_tasks(query, planner, analyst, reporter):
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-# Task 1: Research and Plan
+    # Task 1: Research (LITE)
     research_task = Task(
-        description="""1. Use the 'tavily_search' tool to find the latest live score and match 
-        summary for {goal}. DO NOT use any other tool names.
-        2. Identify the ACTUAL WINNER and ACTUAL LOSER team names.
-        3. Extract top 2 performers from BOTH teams with REAL NAMES and specific stats.
-        4. Analyze the CRITICAL REASONS for the result.
-        Note: The current real-world time is {current_time}.""",
-        expected_output="""A detailed raw data report containing:
-        - Actual team names and final scores.
-        - Winner and Loser team names.
-        - Actual player names and their specific match stats.
-        - In-depth reasoning for the match outcome.""",
+        description=f"Find scores, stats (run rates/partnerships), and 2 turning points for {query}. Get 1 image URL for the top player via Wikipedia. BE BRIEF.",
+        expected_output="Actual scores, key stats, 2 turning points, top player name and image URL.",
         agent=planner
     )
 
-    # Task 2: Validate and Schedule
+    # Task 2: Validate (LITE)
     validation_task = Task(
-        description="""1. Review the analysis data from the Lead Planner to ensure all real names (teams/players) are present.
-        2. Use the check_resource tool to verify if 'MatchStats_DB' is ONLINE.
-        3. Create a realistic execution schedule starting at {current_time}.""",
-        expected_output="""A confirmation of database status and an execution timeline.""",
+        description="Check if MatchStats_DB is online. Confirm image URLs are present.",
+        expected_output="Database status and URL confirmation.",
         agent=analyst
     )
 
-    # Task 3: Deep Executive Report
+    # Task 3: Report (LITE)
     reporting_task = Task(
-        description="""Synthesize the data into a premium Sports Analysis Report.
-        CRITICAL: Do NOT use placeholders like 'Team A' or 'Player 1'. Use the ACTUAL names found by the planner.
-        Format it as a single cohesive report with clear sections.""",
-        expected_output="""A beautifully formatted Markdown report containing:
-        1. 🏏 MATCH SUMMARY (Winner Team, actual scores, and match status)
-        2. 🌟 TOP PERFORMERS (Actual player names and their stats for both teams)
-        3. 🔍 WHY THEY WON/LOST (Deep technical analysis of tactical reasons and turning points)
-        4. 🗄️ EXECUTION LOG (DB status and timeline)""",
+        description="Create a Markdown report with: Summary, Stats, Turning Points, and Top Performer Image.",
+        expected_output="Final Markdown report with clear headers and images.",
         agent=reporter,
         context=[research_task, validation_task]
     )

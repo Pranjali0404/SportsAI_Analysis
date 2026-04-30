@@ -1,14 +1,30 @@
+version: '3.8'
+
 services:
-  app:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sport_agent_app
+    container_name: sport_agent_backend
     ports:
-      - "8501:8501"
+      - "8000:8000"
     volumes:
-      - .:/app
+      - ./data:/app/data
+    env_file:
+      - .env
     environment:
       - OTEL_SDK_DISABLED=true
       - CREWAI_TELEMETRY_OPT_OUT=true
+      - DB_PATH=/app/data/sportlytics.db
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sport_agent_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
     restart: unless-stopped
