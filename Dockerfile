@@ -1,6 +1,7 @@
 # ========================================
 # Dockerfile for FastAPI Backend
 # ========================================
+
 FROM python:3.10-slim
 
 WORKDIR /app
@@ -12,25 +13,29 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install dependencies
+# Copy requirements first (better caching)
 COPY requirements.txt .
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create a non-root user
-RUN groupadd --system --gid 1000 appgroup && useradd --system --uid 1000 --gid 1000 -m appuser
+# Create non-root user
+RUN groupadd --system appgroup && \
+    useradd --system --gid appgroup --create-home appuser
 
-# Copy application code
+# Copy project files
 COPY . .
 
-# Ensure data directory exists
+# Create required directories
 RUN mkdir -p /app/data
 
-# Change ownership to non-root user
+# Change ownership
 RUN chown -R appuser:appgroup /app
 
-# Switch to non-root user
+# Switch user
 USER appuser
 
 EXPOSE 8000
 
+# Start FastAPI app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
