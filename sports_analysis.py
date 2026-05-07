@@ -1,7 +1,7 @@
 from crewai.tools import tool
 
 @tool("check_resource")
-def check_resource(resource_name: str):
+def check_resource(resource_name: str) -> str:
     """
     Checks if a sports database or API is available.
     Input should be the name of the resource (e.g., 'MatchStats_DB').

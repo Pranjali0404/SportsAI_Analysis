@@ -1,26 +1,26 @@
 import { useState, useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { 
-  BarChart3, 
-  History, 
-  Search, 
-  Settings, 
-  LogOut, 
-  Send, 
-  Trophy, 
-  Activity, 
-  Clock, 
+import {
+  History,
+  Search,
+  Settings,
+  LogOut,
+  Send,
+  Trophy,
+  Activity,
+  Clock,
   ChevronRight,
   User,
-  LayoutDashboard
+  LayoutDashboard,
+  Sparkles
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { analysisService } from "../services/api";
 
-// New Components
-import PerformanceCharts from "../components/PerformanceCharts";
+// Components
+import PlayerContentAgent from "../components/PlayerContentAgent";
 import HistoryView from "../components/HistoryView";
 import SettingsView from "../components/SettingsView";
 
@@ -83,8 +83,8 @@ const Dashboard = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'performance':
-        return <PerformanceCharts />;
+      case 'player':
+        return <PlayerContentAgent user={user} />;
       case 'history':
         return <HistoryView history={history} onSelect={(item) => {
           setReport(item.result);
@@ -104,7 +104,7 @@ const Dashboard = () => {
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                   <input
                     type="text"
-                    placeholder="Ask any sports question (e.g., Lakers vs Warriors prediction)"
+                    placeholder="Ask any sports question (e.g., India vs Australia)"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     className="search-input w-full pl-12 pr-32 py-4 rounded-2xl text-white placeholder-slate-500"
@@ -158,13 +158,13 @@ const Dashboard = () => {
                       <button className="text-primary-400 text-sm font-medium hover:underline">Download Markdown</button>
                     </div>
                     <div className="report-markdown prose prose-invert max-w-none">
-                      <ReactMarkdown 
+                      <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
-                          img: ({node, ...props}) => (
+                          img: ({ node, ...props }) => (
                             <div className="my-4">
-                              <img 
-                                {...props} 
+                              <img
+                                {...props}
                                 className="player-image rounded-xl border-2 border-white/5 shadow-2xl"
                                 style={{ maxWidth: '240px', height: 'auto', display: 'block' }}
                                 onError={(e) => {
@@ -193,8 +193,8 @@ const Dashboard = () => {
                 </h3>
                 <div className="space-y-4">
                   {history.length > 0 ? history.slice(0, 5).map((item, index) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       onClick={() => {
                         setReport(item.result);
                         setQuery(item.query);
@@ -215,7 +215,7 @@ const Dashboard = () => {
                     <p className="text-sm text-slate-500 text-center py-4 italic">No history yet</p>
                   )}
                   {history.length > 5 && (
-                    <button 
+                    <button
                       onClick={() => setActiveTab('history')}
                       className="w-full py-2 text-xs text-primary-400 hover:text-primary-300 transition-colors font-medium text-center border-t border-white/5 mt-2 pt-4"
                     >
@@ -239,7 +239,7 @@ const Dashboard = () => {
 
   const navItems = [
     { id: 'analysis', label: 'Analysis', icon: LayoutDashboard },
-    { id: 'performance', label: 'Performance', icon: BarChart3 },
+    { id: 'player', label: 'Player Performance', icon: Sparkles },
     { id: 'history', label: 'History', icon: History },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
@@ -257,14 +257,13 @@ const Dashboard = () => {
 
         <nav className="flex-1 space-y-2">
           {navItems.map((item) => (
-            <button 
+            <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex items-center gap-3 w-full p-3 rounded-xl transition-all duration-200 text-left ${
-                activeTab === item.id 
-                  ? "bg-primary-500/10 text-primary-400 font-semibold border border-primary-500/10 shadow-lg shadow-primary-500/5" 
-                  : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
-              }`}
+              className={`flex items-center gap-3 w-full p-3 rounded-xl transition-all duration-200 text-left ${activeTab === item.id
+                ? "bg-primary-500/10 text-primary-400 font-semibold border border-primary-500/10 shadow-lg shadow-primary-500/5"
+                : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+                }`}
             >
               <item.icon size={20} className={activeTab === item.id ? "animate-pulse" : ""} />
               {item.label}
@@ -273,7 +272,7 @@ const Dashboard = () => {
         </nav>
 
         <div className="pt-6 border-t border-white/5">
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full p-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all text-left group"
           >
@@ -291,7 +290,7 @@ const Dashboard = () => {
             <p className="text-slate-400">Welcome back, {user?.username || 'User'}</p>
           </div>
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={handleLogout}
               className="bg-slate-800 p-2.5 rounded-full border border-white/5 text-slate-400 hover:text-red-400 hover:bg-red-500/5 transition-all"
               title="Logout"

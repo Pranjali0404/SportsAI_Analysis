@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://3.110.105.121:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -31,6 +31,16 @@ export const analysisService = {
   },
   getHistory: async (userId) => {
     const response = await api.get(`/history/${userId}`);
+    return response.data;
+  },
+};
+
+export const playerService = {
+  generatePlayerContent: async (playerName, userId = null) => {
+    const response = await api.post('/player/generate', {
+      player_name: playerName,
+      user_id: userId,
+    });
     return response.data;
   },
 };

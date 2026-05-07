@@ -10,7 +10,7 @@ search_tool = TavilySearchTool()
 search_tool.name = "tavily_search"
 
 local_llm = LLM(
-    model="groq/llama-3.1-8b-instant", # Switched to 8b for higher TPM/RPM limits and better reliability
+    model="groq/llama-3.3-70b-versatile",
     temperature=0.3
 )
 
