@@ -1,89 +1,108 @@
----
-title: Sportlytics
-emoji: 🏏
-colorFrom: indigo
-colorTo: blue
-sdk: streamlit
-sdk_version: 1.31.1
-app_file: app.py
-pinned: false
----
+# AI Sports Analyst Platform
 
-# 🏏 Sportlytics - AI Sports Analysis Assistant
-
-
-Sportlytics is a premium, multi-agent AI application designed to provide deep, real-time sports analysis. Using specialized AI agents, it researches live match data, analyzes performance stats of teams and players, and generates professional executive reports.
+It is a premium, multi-agent AI application designed to provide deep, real-time sports analysis. It leverages a decoupled architecture with a FastAPI backend and a modern React frontend, using specialized AI agents to research live match data, analyze performance stats, and generate professional executive reports.
 
 ## ✨ Features
 
-- **🔐 Secure Authentication**: Signup, Login, and Password Reset (with validation).
-- **🕵️ Multi-Agent System**:
-    - **Planner**: Researches live data and plans the analysis.
-    - **Analyst**: Validates technical feasibility and manages schedules.
-    - **Reporter**: Synthesizes findings into a beautiful Markdown report.
-- **📊 Deep Analysis**: Actual player names, team stats, tactical winner/loser reasoning.
-- **📂 User History**: Track and view all your previous analysis reports.
-- **📥 Downloadable Reports**: Export analysis as `.md` files.
-- **🎨 Premium UI**: Modern Glassmorphism design with a responsive layout.
+- **🔐 Secure Authentication**: Full auth flow including Signup, Login, and Password Reset.
+- **🕵️ Multi-Agent System (CrewAI)**:
+    - **Planner**: Researches live data and plans the analysis strategy.
+    - **Analyst**: Validates technical feasibility and resource availability.
+    - **Reporter**: Synthesizes findings into a comprehensive Markdown report.
+    - **Player Agent**: Specialized agent for generating detailed player profiles with real-time stats and Wikipedia photos.
+- **📊 Real-Time Data**: Integration with Tavily AI for the latest sports scores and news.
+- **🎨 Premium UI**: Modern Dashboard with Glassmorphism design, smooth animations (Framer Motion), and responsive layout.
+- **📂 User History**: Persistent storage of previous analysis reports for each user.
+- **🐳 Docker Ready**: Full containerization for easy deployment using Docker Compose.
 
 ---
 
-## 🚀 Getting Started (Local Setup)
+## 🚀 Tech Stack
 
-Follow these steps to get the project running on your local machine.
+### Frontend
+- **React 19** (Vite)
+- **Tailwind CSS** for styling
+- **Framer Motion** for animations
+- **Lucide React** for iconography
+- **Axios** for API communication
+
+### Backend
+- **FastAPI** (Python 3.10+)
+- **CrewAI** for multi-agent orchestration
+- **Groq (Llama 3.3 70B)** for high-speed, intelligent reasoning
+- **Tavily AI** for real-time web research
+- **SQLite** for database management
+- **Pydantic** for data validation
+
+---
+
+## 🛠️ Getting Started (Local Setup)
 
 ### 📋 Prerequisites
-- **Python 3.10+** installed.
-- API Keys from:
-    - [Groq Console](https://console.groq.com/) (Free tier available).
-    - [Tavily AI](https://tavily.com/) (For real-time search).
+- **Python 3.10+**
+- **Node.js & npm**
+- API Keys from [Groq](https://console.groq.com/) and [Tavily](https://tavily.com/)
 
-### 🛠️ Installation Steps
-
-1. **Clone the Repository**
+### 1. Setup Backend
+1. Navigate to the root directory.
+2. Create a virtual environment:
    ```bash
-   git clone https://github.com/pranjali2117/final_agentic.git
-   cd final_agentic
-   ```
-
-2. **Create a Virtual Environment**
-   ```bash
-   # Windows
    python -m venv venv
-   .\venv\Scripts\Activate.ps1
-
-   # Mac/Linux
-   python3 -m venv venv
-   source venv/bin/activate
+   source venv/bin/activate  # Mac/Linux
+   .\venv\Scripts\activate   # Windows
    ```
-
-3. **Install Dependencies**
+3. Install dependencies:
    ```bash
-   pip install -r requirement.txt
+   pip install -r requirements.txt
    ```
-
-4. **Configure Environment Variables**
-   Create a `.env` file in the root directory and add your API keys:
+4. Create a `.env` file:
    ```env
-   GROQ_API_KEY=your_groq_api_key_here
-   TAVILY_API_KEY=your_tavily_api_key_here
+   GROQ_API_KEY=your_groq_key
+   TAVILY_API_KEY=your_tavily_key
+   ```
+5. Run the backend:
+   ```bash
+   python main.py
    ```
 
-### 🏃 Running the App
-
-Start the Streamlit application with the following command:
-```bash
-streamlit run app.py
-```
+### 2. Setup Frontend
+1. Navigate to the `frontend` directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file in `frontend/`:
+   ```env
+   VITE_API_URL=http://localhost:8000
+   ```
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## 🛠️ Built With
-- **Streamlit**: For the interactive web interface.
-- **CrewAI**: For multi-agent orchestration.
-- **Groq/Llama 3**: For fast and intelligent language processing.
-- **Tavily AI**: For high-quality real-time web research.
-- **SQLite**: For secure user data and history management.
+## 🐳 Docker Deployment
+
+To run the entire stack using Docker:
+
+1. Ensure Docker and Docker Compose are installed.
+2. Run the following command in the root directory:
+   ```bash
+   docker-compose up --build
+   ```
+3. Access the app at `http://localhost:5173`.
 
 ---
-Created with ❤️ for Sport Fans.
+
+## 🛠️ Project Structure
+- `/` - FastAPI Backend, CrewAI Agents, and Logic
+- `/frontend` - React/Vite/Tailwind Frontend
+- `/database.py` - SQLite operations
+- `/main.py` - FastAPI entry point
+- `/agents.py` & `/tasks.py` - CrewAI configuration
+
+---
